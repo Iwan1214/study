@@ -55,48 +55,49 @@ function gainXP() {
 // AI TUTOR (REAL GEMINI API)
 // ======================
 async function askAI() {
-  let input = document.getElementById("aiInput").value;
-
-  if (!input) return;
-
-  document.getElementById("aiBox").innerText = "Thinking... 🤖";
-
-  const apiKey = "AIzaSyD602McemRJEc9e1VAmtiS6Yi48h4iRixI"; // 🔴 tukar sini
-
   try {
-   const res = await fetch(
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
+    let input = document.getElementById("aiInput").value;
+
+    console.log("User Input:", input);
+
+    document.getElementById("aiBox").innerText = "Thinking... 🤖";
+
+    const apiKey = "YOUR_API_KEY";
+
+    const res = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
             {
-              text: input
+              parts: [
+                {
+                  text: input
+                }
+              ]
             }
           ]
-        }
-      ]
-    })
-  }
-);
+        })
+      }
+    );
 
-    const data = await response.json();
+    const data = await res.json();
+    console.log(data);
 
     let reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response from AI.";
+      "No response from AI";
 
     document.getElementById("aiBox").innerText = reply;
- catch (error) {
-  console.log("AI ERROR:", error);
-  document.getElementById("aiBox").innerText =
-    "Error connecting to AI 😢";
-}
+
+  } catch (error) {
+    console.log("AI ERROR:", error);
+    document.getElementById("aiBox").innerText =
+      "Error connecting to AI 😢";
   }
 }
 
