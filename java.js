@@ -5,11 +5,8 @@ let level = 1;
 // BOOT SYSTEM
 // ======================
 setTimeout(() => {
-  const boot = document.getElementById("boot");
-  const app = document.getElementById("app");
-
-  if (boot) boot.style.display = "none";
-  if (app) app.classList.remove("hidden");
+  document.getElementById("boot").style.display = "none";
+  document.getElementById("app").classList.remove("hidden");
 }, 2000);
 
 // ======================
@@ -19,15 +16,15 @@ function openNote(type) {
   let text = "";
 
   if (type === "electrical") {
-    text = "⚡ Electrical Basics:\n- Voltage\n- Current\n- Resistance\n- Ohm's Law (V = I × R)";
+    text = "⚡ Electrical Basics:\nVoltage, Current, Resistance, Ohm's Law";
   }
 
   if (type === "electronics") {
-    text = "🔌 Electronics:\n- Diode\n- Transistor\n- IC\n- Microcontroller";
+    text = "🔌 Electronics:\nDiode, Transistor, IC, Microcontroller";
   }
 
   if (type === "programming") {
-    text = "💻 Programming:\n- Variables\n- Loops\n- Functions\n- JavaScript";
+    text = "💻 Programming:\nVariables, Loops, Functions, JavaScript";
   }
 
   document.getElementById("noteBox").innerText = text;
@@ -36,10 +33,10 @@ function openNote(type) {
 }
 
 // ======================
-// XP & LEVEL SYSTEM
+// XP SYSTEM
 // ======================
 function gainXP() {
-  xp += 25;
+  xp += 20;
 
   if (xp >= 100) {
     level++;
@@ -52,18 +49,18 @@ function gainXP() {
 }
 
 // ======================
-// AI TUTOR (REAL GEMINI API)
+// AI FUNCTION (REAL GEMINI)
 // ======================
 async function askAI() {
+  let input = document.getElementById("aiInput").value;
+
+  if (!input) return;
+
+  document.getElementById("aiBox").innerText = "Thinking... 🤖";
+
+  const apiKey = "AIzaSyD602McemRJEc9e1VAmtiS6Yi48h4iRixI"; // 🔴 tukar sini
+
   try {
-    let input = document.getElementById("aiInput").value;
-
-    console.log("User Input:", input);
-
-    document.getElementById("aiBox").innerText = "Thinking... 🤖";
-
-    const apiKey = "YOUR_API_KEY";
-
     const res = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey,
       {
@@ -86,7 +83,6 @@ async function askAI() {
     );
 
     const data = await res.json();
-    console.log(data);
 
     let reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
@@ -95,14 +91,14 @@ async function askAI() {
     document.getElementById("aiBox").innerText = reply;
 
   } catch (error) {
-    console.log("AI ERROR:", error);
+    console.log(error);
     document.getElementById("aiBox").innerText =
       "Error connecting to AI 😢";
   }
 }
 
 // ======================
-// SEARCH FUNCTION
+// SEARCH
 // ======================
 document.addEventListener("input", function (e) {
   if (e.target.id === "search") {
