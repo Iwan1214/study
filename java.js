@@ -92,10 +92,11 @@ async function askAI() {
       "No response from AI.";
 
     document.getElementById("aiBox").innerText = reply;
-  } catch (error) {
-    document.getElementById("aiBox").innerText =
-      "Error connecting to AI 😢";
-    console.log(error);
+ catch (error) {
+  console.log("AI ERROR:", error);
+  document.getElementById("aiBox").innerText =
+    "Error connecting to AI 😢";
+}
   }
 }
 
