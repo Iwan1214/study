@@ -1,81 +1,49 @@
-let xp = 0;
-let level = 1;
 
-// ======================
-// BOOT SYSTEM
-// ======================
-setTimeout(() => {
-  document.getElementById("boot").style.display = "none";
-  document.getElementById("app").classList.remove("hidden");
-}, 2000);
+// 🕒 CLOCK
+setInterval(() => {
+  document.getElementById("clock").innerText =
+    new Date().toLocaleTimeString();
+}, 1000);
 
-// ======================
-// NOTES SYSTEM
-// ======================
-function openNote(type) {
-  let text = "";
 
-  if (type === "electrical") {
-    text = "⚡ Electrical Basics:\nVoltage, Current, Resistance, Ohm's Law";
-  }
+// 🌍 WEATHER AUTO LOCATION
+navigator.geolocation.getCurrentPosition(async (pos) => {
 
-  if (type === "electronics") {
-    text = "🔌 Electronics:\nDiode, Transistor, IC, Microcontroller";
-  }
+  const lat = pos.coords.latitude;
+  const lon = pos.coords.longitude;
 
-  if (type === "programming") {
-    text = "💻 Programming:\nVariables, Loops, Functions, JavaScript";
-  }
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
 
-  document.getElementById("noteBox").innerText = text;
+  const res = await fetch(url);
+  const data = await res.json();
 
-  gainXP();
-}
+  document.getElementById("weather").innerText =
+    `Temp: ${data.current_weather.temperature}°C | Wind: ${data.current_weather.windspeed} km/h`;
 
-// ======================
-// XP SYSTEM
-// ======================
-function gainXP() {
-  xp += 20;
+});
 
-  if (xp >= 100) {
-    level++;
-    xp = 0;
-    alert("🚀 LEVEL UP!");
-  }
 
-  document.getElementById("xp").innerText = xp;
-  document.getElementById("level").innerText = level;
-}
-
-// ======================
-// AI FUNCTION (REAL GEMINI)
-// ======================
+// 🤖 AI TUTOR (FIXED GEMINI)
 async function askAI() {
-  let input = document.getElementById("aiInput").value;
-
-  if (!input) return;
-
-  document.getElementById("aiBox").innerText = "Thinking... 🤖";
-
-  const apiKey = "AIzaSyD602McemRJEc9e1VAmtiS6Yi48h4iRixI"; // 🔴 tukar sini
 
   try {
+
+    let input = document.getElementById("aiInput").value;
+    document.getElementById("aiBox").innerText = "Thinking... 🤖";
+
+    const apiKey = "AIzaSyAj4mwHOade4mbhJmts_Pz0w7MdWhcr9Bc";
+
     const res = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
             {
-              parts: [
-                {
-                  text: input
-                }
-              ]
+              parts: [{
+                text: "You are a study tutor. Explain simply: " + input
+              }]
             }
           ]
         })
@@ -84,38 +52,17 @@ async function askAI() {
 
     const data = await res.json();
 
-    let reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response from AI";
+    let reply = "No response";
+
+    const c = data?.candidates?.[0];
+    if (c?.content?.parts?.length > 0) {
+      reply = c.content.parts[0].text;
+    }
 
     document.getElementById("aiBox").innerText = reply;
 
-  } catch (error) {
-    console.log(error);
-    document.getElementById("aiBox").innerText =
-      "Error connecting to AI 😢";
+  } catch (err) {
+    document.getElementById("aiBox").innerText = "AI Error 😢";
+    console.log(err);
   }
-}
-
-// ======================
-// SEARCH
-// ======================
-document.addEventListener("input", function (e) {
-  if (e.target.id === "search") {
-    let val = e.target.value.toLowerCase();
-    let cards = document.getElementsByClassName("card");
-
-    for (let c of cards) {
-      c.style.display = c.innerText.toLowerCase().includes(val)
-        ? "block"
-        : "none";
-    }
-  }
-});
-
-// ======================
-// THEME TOGGLE
-// ======================
-function toggleTheme() {
-  document.body.classList.toggle("light");
 }
