@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NEON OS v3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="boot">
+  <h1>⚡ NEON OS BOOTING...</h1>
+</div>
+
+<div id="app" class="hidden">
+
+  <h1>🧠 NEON STUDY OS v3</h1>
+
+  <div class="topbar">
+    Level: <span id="level">1</span> |
+    XP: <span id="xp">0</span>
+  </div>
+
+  <button onclick="toggleTheme()">🌙 Toggle Theme</button>
+
+  <div class="grid">
+
+    <div class="card" onclick="openNote('electrical')">⚡ Electrical</div>
+    <div class="card" onclick="openNote('electronics')">🔌 Electronics</div>
+    <div class="card" onclick="openNote('programming')">💻 Programming</div>
+
+  </div>
+
+  <div class="panel">
+
+    <div id="noteBox">Select a module</div>
+
+    <input id="aiInput" placeholder="Ask AI tutor...">
+    <button onclick="askAI()">Ask 🤖</button>
+
+    <div id="aiBox"></div>
+
+  </div>
+
+</div>
+
+<script src="java.js"></script>
+
+</body>
+</html>
